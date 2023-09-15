@@ -1,0 +1,189 @@
+<ng-container *ngIf="isLoading">
+  <app-loader></app-loader>
+</ng-container>
+
+<button
+  type="button"
+  id="addNewActivity"
+  class="btn btn-warning"
+  data-bs-toggle="modal"
+  data-bs-target="#addActivity"
+  (click)="initializeForm()"
+>
+  Create New Activity
+</button>
+<div
+  class="modal fade"
+  id="addActivity"
+  tabindex="-1"
+  aria-labelledby="addActivityLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addAssetModalLabel">New Activity</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="type">Type:</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            formControlName="type"
+            value="{{ activityType }}"
+            readonly
+          />
+          <div
+            *ngIf="
+              activityForm.get('type')?.errors &&
+              activityForm.get('type')?.touched
+            "
+            class="text-danger"
+          >
+            <div *ngIf="activityForm.get('type')?.errors?.['required']">
+              Type is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            formControlName="title"
+          />
+          <div
+            *ngIf="
+              activityForm.get('title')?.errors &&
+              activityForm.get('title')?.touched
+            "
+            class="text-danger"
+          >
+            <div *ngIf="activityForm.get('title')?.errors?.['required']">
+              Title is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="location">Location:</label>
+          <input
+            type="text"
+            id="location"
+            class="form-control"
+            formControlName="location"
+          />
+          <div
+            *ngIf="
+              activityForm.get('location')?.errors &&
+              activityForm.get('location')?.touched
+            "
+            class="text-danger"
+          >
+            <div *ngIf="activityForm.get('location')?.errors?.['required']">
+              Location is required.
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="date" class="form-group">
+          <label for="date">Date:</label>
+          <div class="row p-1">
+            <div>
+              Start Date :
+              <input
+                type="date"
+                class="form-control"
+                formControlName="start_date"
+                placeholder="Start Date"
+              />
+              <div
+                *ngIf="
+                  activityForm.get('date.start_date')?.invalid &&
+                  activityForm.get('date.start_date')?.touched
+                "
+                class="text-danger"
+              >
+                <div
+                  *ngIf="activityForm.get('date.start_date')?.errors?.['required']"
+                >
+                  Start Date is required.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="redirectionLink">Redirection Link:</label>
+          <input
+            type="text"
+            id="redirectionLink"
+            class="form-control"
+            formControlName="redirection_link"
+          />
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="d-flex mt-2 mb-2 gap-2">
+  <label *ngFor="let type of activityTypes">
+    <input type="radio" name="activity-type" (click)="getActivities(type)" />
+    {{ type }}
+  </label>
+</div> -->
+
+<h4 class="mt-2 mb-2">Listing:</h4>
+
+<div *ngIf="activities.length > 0; else noActivities" class="list">
+  <div *ngFor="let activity of activities" class="card">
+    <!-- Display activity details -->
+    <h2 class="titleWrap">{{ activity.title }}</h2>
+    <hr>
+   <div class="ratio ratio-16x9">
+    <iframe [src]="getSafeVideoUrl(activity.redirection_link)" title="video"></iframe>
+   </div>
+    <b>{{activity.location}}</b>
+    <hr>
+    <p>
+      Dates :
+      {{ showDate(activity) }}
+    </p>
+    <p>{{ activity.desc }}</p><hr>
+    <div class="btn-controls">
+      <button
+        class="btn btn-info btn-left edit-btn"
+        type="button"
+        (click)="editActivity(activity)"
+      >
+        Edit
+      </button>
+      <button
+        class="btn btn-danger btn-left"
+        type="button"
+        (click)="deleteActivity(activity._id)"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noActivities>
+  <p>No activities available.</p>
+</ng-template>

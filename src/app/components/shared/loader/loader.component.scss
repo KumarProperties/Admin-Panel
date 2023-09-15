@@ -1,0 +1,19 @@
+.loader-wrapper {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999999;
+}
+
+.spinner-border {
+  border: var(--bs-spinner-border-width) solid white;
+  border-right-color: transparent;
+}

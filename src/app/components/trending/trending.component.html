@@ -1,0 +1,53 @@
+<button class="btn btn-dark" (click)="updateProjects()">Update List</button>
+<table class="table">
+  <thead>
+    <tr>
+      <th>
+        No.
+      </th>
+      <th>
+        Project Image
+      </th>
+      <th>
+        Project Name
+      </th>
+      <th>Sub title</th>
+      <th>
+        Tags
+      </th>
+      <th>
+        Position Change
+      </th>
+      <th>
+        Delete
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let i of projectData let j=index">
+      <td>
+        {{j +1}}
+      </td>
+      <td class="td-2">
+        <img class="img-fluid" [src]="i.title_image[0]" alt="">
+      </td>
+      <td>
+        {{i.title}}
+      </td>
+      <td>
+        {{i.sub_title}}
+      </td>
+      <td >
+       <div *ngFor="let k of i.tags">{{k}}</div>
+      </td>
+      <td >
+        <div>
+        <button class="btn btn-info" (click)="moveArrayUp(j)">Move Up</button>
+        <button class="btn btn-warning m-3" (click)="moveArrayDown(j)" >Move down</button></div>
+      </td>
+      <td class="td-btn" (click)="deleteProject(i._id)">
+        <img class="img-fluid" src="assets/delete.png" alt="">
+      </td>
+    </tr>
+  </tbody>
+</table>

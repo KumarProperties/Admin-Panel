@@ -1,0 +1,61 @@
+.modal-dialog {
+  max-width: 60%;
+}
+
+.points {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bulleting {
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  & > div {
+    border: 2pt solid gainsboro;
+    width: 21rem;
+    height: 100%;
+    max-width: 21rem;
+    padding: 0.8rem;
+    border-radius: 8pt;
+
+    & > label {
+      width: 21rem;
+    }
+  }
+}
+.entries {
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  & > div {
+    border: 2pt solid gainsboro;
+    width: 21rem;
+    height: 100%;
+    max-width: 21rem;
+    padding: 0.8rem;
+    border-radius: 8pt;
+
+    & > label {
+      width: 21rem;
+    }
+  }
+}
+.btn-left{
+  width: 40%;
+  
+}
+.edit-btn{
+  background: lightblue;
+}
+
+.btn-controls{
+  gap: 10px;
+}

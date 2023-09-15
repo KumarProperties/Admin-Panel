@@ -1,0 +1,1055 @@
+<button
+  type="button"
+  class="btn btn-warning"
+  id="addNewProject"
+  data-bs-toggle="modal"
+  data-bs-target="#addProject"
+  (click)="initializeForm()"
+>
+  Create New Project
+</button>
+<div
+  class="modal fade"
+  id="addProject"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addAssetModalLabel">New Project</h1>
+        <button
+          type="button"
+          id="closeAddProject"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeProject()"
+        ></button>
+      </div>
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="container">
+        <!-- Title Image -->
+        <div class="form-group">
+          <label for="title_image">Title Image:</label>
+          <app-image
+            id="title_image"
+            key="title_image"
+            [setForm]="projectForm"
+            [addFiles]="addTitileImg.bind(this)"
+            (onDelete)="addDeletedImageUrl($event)"
+          ></app-image>
+          <div
+            *ngIf="
+              projectForm.controls['title_image']?.invalid &&
+              projectForm.controls['title_image']?.touched
+            "
+            class="text-danger"
+          >
+            Title Image is required.
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="row">
+          <div class="form-group col-lg-6">
+            <label for="title">Title:</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              formControlName="title"
+            />
+            <div
+              *ngIf="
+                projectForm.controls['title']?.invalid &&
+                projectForm.controls['title']?.touched
+              "
+              class="text-danger"
+            >
+              Title is required.
+            </div>
+          </div>
+
+          <!-- Sub Title -->
+          <div class="form-group col-lg-6">
+            <label for="sub_title">Sub Title:</label>
+            <input
+              type="text"
+              id="sub_title"
+              class="form-control"
+              formControlName="sub_title"
+            />
+            <div
+              *ngIf="
+                projectForm.controls['sub_title']?.invalid &&
+                projectForm.controls['sub_title']?.touched
+              "
+              class="text-danger"
+            >
+              Sub Title is required.
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="slug">Slug:</label>
+          <input
+            type="text"
+            id="slug"
+            class="form-control"
+            formControlName="slug"
+          />
+        </div>
+        <!-- tags -->
+        <div formArrayName="tags" class="col-group">
+          <label for="tags">Tags</label>
+
+          <div
+            *ngFor="let tag of getTags().controls; let i = index"
+            class="form-group"
+          >
+            <div class="row-group flex-nowrap">
+              <input
+                type="text"
+                [id]="'tags' + i"
+                [formControlName]="i"
+                [placeholder]="'Tag ' + (i + 1)"
+                class="form-control"
+              />
+              <button
+                type="button"
+                (click)="removeTag(i)"
+                class="btn btn-danger"
+              >
+                Delete
+              </button>
+            </div>
+            <div *ngIf="tag?.invalid && tag?.touched" class="text-danger">
+              Tag is required.
+            </div>
+          </div>
+          <button type="button" (click)="addTag()" class="btn btn-warning">
+            Add Tag
+          </button>
+        </div>
+        <!-- Contact Number -->
+        <!-- <div class="form-group">
+          <label for="contact_number">Contact Number:</label>
+          <input
+            type="text"
+            id="contact_number"
+            class="form-control"
+            formControlName="contact_number"
+          />
+          <div
+            *ngIf="
+              projectForm.controls['contact_number']?.invalid &&
+              projectForm.controls['contact_number']?.touched
+            "
+            class="text-danger"
+          >
+            Please enter a valid 10-digit contact number.
+          </div>
+        </div> -->
+
+        <div formArrayName="meta_tags" class="col-group">
+          <label for="meta_tags">Meta Tags</label>
+
+          <div
+            *ngFor="let tag of getMetaTags().controls; let i = index"
+            class="form-group"
+            formGroupName="{{ i }}"
+          >
+            <div class="row-group flex-nowrap">
+              <input
+                type="text"
+                [id]="'key' + i"
+                formControlName="key"
+                placeholder="key"
+                class="form-control"
+              />
+              <input
+                type="text"
+                [id]="'tag' + i"
+                formControlName="tag"
+                placeholder="tag"
+                class="form-control"
+              />
+              <button
+                type="button"
+                (click)="removeMetaTag(i)"
+                class="btn btn-danger"
+              >
+                Delete
+              </button>
+            </div>
+            <div *ngIf="tag?.invalid && tag?.touched" class="text-danger">
+              Tag is required.
+            </div>
+          </div>
+          <button type="button" (click)="addMetaTags()" class="btn btn-warning">
+            Add Tag
+          </button>
+        </div>
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea
+            id="description"
+            class="form-control"
+            formControlName="description"
+          ></textarea>
+          <div
+            *ngIf="
+              projectForm.controls['description']?.invalid &&
+              projectForm.controls['description']?.touched
+            "
+            class="text-danger"
+          >
+            Description is required.
+          </div>
+        </div>
+
+        <!-- Size -->
+        <!-- <div class="form-group">
+          <label for="size">Size:</label>
+          <input
+            id="size"
+            class="form-control"
+            formControlName="size"
+            type="text"
+          />
+
+          <div
+            *ngIf="
+              projectForm.controls['size']?.invalid &&
+              projectForm.controls['size']?.touched
+            "
+            class="text-danger"
+          >
+            Size is required.
+          </div>
+        </div>  -->
+
+        <!-- Tags -->
+
+        <!-- Tech Stack -->
+        <div formGroupName="tech_stack" class="form-group col-group">
+          <label for="tech_stack">Description</label>
+
+          <div class="row-group">
+            <!-- <div>
+              <label for="image_top">Image Top:</label>
+              <app-image
+                key="image_top"
+                [setForm]="projectForm.get('tech_stack')"
+              ></app-image>
+
+              <div
+                *ngIf="
+                  projectForm.get('tech_stack.image_top')?.invalid &&
+                  projectForm.get('tech_stack.image_top')?.touched
+                "
+                class="text-danger"
+              >
+                Image Top is required.
+              </div>
+            </div> -->
+
+            <!-- <div>
+              <label for="image_bottom">Image Bottom:</label>
+              <app-image
+                key="image_bottom"
+                [setForm]="projectForm.get('tech_stack')"
+              ></app-image>
+
+              <div
+                *ngIf="
+                  projectForm.get('tech_stack.image_bottom')?.invalid &&
+                  projectForm.get('tech_stack.image_bottom')?.touched
+                "
+                class="text-danger"
+              >
+                Image Bottom is required.
+              </div>
+            </div> -->
+          </div>
+          <div>
+            <label for="tech_stack_title">Description Title:</label>
+            <input
+              type="text"
+              id="tech_stack_title"
+              class="form-control"
+              formControlName="title"
+            />
+            <div
+              *ngIf="
+                projectForm.get('tech_stack.title')?.invalid &&
+                projectForm.get('tech_stack.title')?.touched
+              "
+              class="text-danger"
+            >
+              Description Title is required.
+            </div>
+          </div>
+
+          <div>
+            <label for="tech_stack_description">Description 2:</label>
+            <textarea
+              id="tech_stack_description"
+              class="form-control"
+              formControlName="description"
+            ></textarea>
+            <div
+              *ngIf="
+                projectForm.get('tech_stack.description')?.invalid &&
+                projectForm.get('tech_stack.description')?.touched
+              "
+              class="text-danger"
+            >
+              Description 2 is required.
+            </div>
+          </div>
+
+          <!-- Team Member -->
+          <div>Team Members Details</div>
+          <div>
+            <div formArrayName="entries" class="entries">
+              <div
+                *ngFor="let pair of getTeamMember()?.controls; let i = index"
+                formGroupName="{{ i }}"
+              >
+                <label for="TeamMemberTitle">Team Title :</label>
+                <div class="row-group flex-nowrap">
+                  <input
+                    type="text"
+                    [id]="'TeamMemberTitle' + i"
+                    formControlName="key"
+                    class="form-control"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeTeamMember(i)"
+                    class="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <div>
+                  <label for="TeamMemberName">TeamMember Name:</label>
+                  <input
+                    type="text"
+                    [id]="'TeamMemberName' + i"
+                    formControlName="value"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="addTeamMember()"
+                class="btn btn-warning"
+              >
+                Add TeamMember
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!--Certifications-->
+        <div formGroupName="certification" class="col-group">
+          <label for="certifications">Certifications</label>
+          <div>
+            <label for="walk_through">Description:</label>
+            <textarea
+              type="text"
+              formControlName="description"
+              placeholder="Description"
+              class="form-control"
+            ></textarea>
+          </div>
+
+          <div class="col-group">
+            <label for="Certification">Qr Codes:</label>
+            <app-image
+              key="qr_images"
+              [setForm]="projectForm.get('certification')"
+              [addFiles]="addQrCode.bind(this)"
+              (onDelete)="addDeletedImageUrl($event)"
+            ></app-image>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="location_id">Location :</label>
+
+          <select
+            type="text"
+            id="location_id"
+            class="form-control"
+            formControlName="location_id"
+          >
+            <option
+              *ngFor="let location of locations"
+              [value]="location.location_id"
+            >
+              {{ location.name }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              projectForm.controls['location_id']?.invalid &&
+              projectForm.controls['location_id']?.touched
+            "
+            class="text-danger"
+          >
+            Location ID is required.
+          </div>
+        </div>
+
+        <!-- Apartment Type -->
+        <div formArrayName="apt_type" class="col-group">
+          <label for="apt_type">Apartment Type</label>
+
+          <div
+            *ngFor="
+              let apartment of getApartmentTypes().controls;
+              let i = index
+            "
+            class="form-group"
+          >
+            <div class="row-group flex-nowrap">
+              <input
+                type="text"
+                [id]="'apt_type' + i"
+                [formControlName]="i"
+                [placeholder]="'Apartment Type ' + (i + 1)"
+                class="form-control"
+              />
+              <button
+                type="button"
+                (click)="removeApartmentType(i)"
+                class="btn btn-danger"
+              >
+                Delete
+              </button>
+            </div>
+            <div
+              *ngIf="apartment?.invalid && apartment?.touched"
+              class="text-danger"
+            >
+              Apartment is required.
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="addApartmentType()"
+            class="btn btn-warning"
+          >
+            Add Apartment Type
+          </button>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label for="status">Status:</label>
+          <select id="status" class="form-control" formControlName="status">
+            <option value="Ongoing">ON_GOING</option>
+            <option value="Sold">SOLD</option>
+            <option value="New">NEW</option>
+          </select>
+          <div
+            *ngIf="
+              projectForm.controls['status']?.invalid &&
+              projectForm.controls['status']?.touched
+            "
+            class="text-danger"
+          >
+            Status is required.
+          </div>
+        </div>
+
+        <!-- Property Type -->
+        <div class="form-group">
+          <label for="propertyType">Property Type:</label>
+          <select
+            id="propertyType"
+            class="form-control"
+            formControlName="propertyType"
+          >
+            <option value="COMMERCIAL">COMMERCIAL</option>
+            <option value="RESIDENTIAL">RESIDENTIAL</option>
+          </select>
+          <div
+            *ngIf="
+              projectForm.controls['propertyType']?.invalid &&
+              projectForm.controls['propertyType']?.touched
+            "
+            class="text-danger"
+          >
+            Property Type is required.
+          </div>
+        </div>
+
+        <!-- Flat View -->
+        <div formGroupName="flat_view" class="form-group col-group">
+          <label for="walk_through">Flat View</label>
+          <div>
+            <label for="walk_through">Walk Through:</label>
+            <input
+              type="text"
+              id="walk_through"
+              class="form-control"
+              formControlName="walk_through"
+            />
+            <div
+              *ngIf="
+                projectForm.get('flat_view.walk_through')?.invalid &&
+                projectForm.get('flat_view.walk_through')?.touched
+              "
+              class="text-danger"
+            >
+              Walk Through URL is required.
+            </div>
+          </div>
+
+          <div>
+            <label for="flat_view_360">Flat View 360:</label>
+            <input
+              type="text"
+              id="flat_view_360"
+              class="form-control"
+              formControlName="flat_view_360"
+            />
+            <div
+              *ngIf="
+                projectForm.get('flat_view.flat_view_360')?.invalid &&
+                projectForm.get('flat_view.flat_view_360')?.touched
+              "
+              class="text-danger"
+            >
+              Flat View 360 URL is required.
+            </div>
+          </div>
+
+          <div>
+            <label for="live_view">Live View:</label>
+            <input
+              type="text"
+              id="live_view"
+              class="form-control"
+              formControlName="live_view"
+            />
+            <div
+              *ngIf="
+                projectForm.get('flat_view.live_view')?.invalid &&
+                projectForm.get('flat_view.live_view')?.touched
+              "
+              class="text-danger"
+            >
+              Live View URL is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Flat Details -->
+        <div
+          formGroupName="flat_details"
+          class="form-group flat_details d-flex flex-column gap-3"
+        >
+          <!-- Amenities -->
+          <div formGroupName="amenities" class="col-group">
+            <label for="amenities_title">Amenities</label>
+            <div class="row-group">
+              <div class="overflow-auto">
+                <label for="amenities_image">Amenities Images:</label>
+                <app-image
+                  key="images"
+                  [setForm]="projectForm.get('flat_details.amenities')"
+                  [addFiles]="addAminitiesImg.bind(this)"
+                  (onDelete)="addDeletedImageUrl($event)"
+                ></app-image>
+              </div>
+            </div>
+
+            <div formArrayName="bulleting" class="bulleting">
+              <div
+                *ngFor="let bullet of getAmenities()?.controls; let i = index"
+                formGroupName="{{ i }}"
+              >
+                <label for="amenities_title"
+                  >Amenities Title {{ i + 1 }} :</label
+                >
+                <div class="row-group flex-nowrap">
+                  <input
+                    type="text"
+                    [id]="'amenities_title' + i"
+                    formControlName="title"
+                    class="form-control"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeAmenity(i)"
+                    class="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <div
+                  *ngIf="
+                    bullet.get('title')?.invalid && bullet.get('title')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Amenities Title is required.
+                </div>
+
+                <label for="amenities_points"
+                  >Amenity Points {{ i + 1 }} :</label
+                >
+                <div formArrayName="points" class="points">
+                  <div
+                    *ngFor="
+                      let point of getAmenityPoints(i)?.controls;
+                      let j = index
+                    "
+                  >
+                    <label for="amenities_points{{ i }}_{{ j }}"
+                      >Amenities Point {{ i + 1 }}.{{ j + 1 }}:</label
+                    >
+                    <div class="row-group flex-nowrap">
+                      <input
+                        type="text"
+                        [id]="'amenities_points' + i + '_' + j"
+                        [formControlName]="j"
+                        class="form-control"
+                      />
+                      <button
+                        type="button"
+                        (click)="removeAmenityPoint(i, j)"
+                        class="btn btn-danger"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    <div
+                      *ngIf="point?.invalid && point?.touched"
+                      class="text-danger"
+                    >
+                      Amenities Point is required.
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="addAmenityPoint(i)"
+                    class="btn btn-info"
+                  >
+                    Add Amenity Point
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="addAmenity()"
+                class="btn btn-warning"
+              >
+                Add Amenity
+              </button>
+            </div>
+          </div>
+
+          <!-- Specification -->
+          <div formGroupName="specification" class="col-group">
+            <label for="specification_title">Specifications</label>
+
+            <div class="row-group">
+              <div>
+                <label for="specification_top_image"
+                  >Specification Top Image:</label
+                >
+                <app-image
+                  key="top_image"
+                  [setForm]="projectForm.get('flat_details.specification')"
+                  (onDelete)="addDeletedImageUrl($event)"
+                ></app-image>
+                <div
+                  *ngIf="
+                    projectForm.get('flat_details.specification.top_image')
+                      ?.invalid &&
+                    projectForm.get('flat_details.specification.top_image')
+                      ?.touched
+                  "
+                  class="text-danger"
+                >
+                  Specification Top Image is required.
+                </div>
+              </div>
+
+              <div>
+                <label for="specification_bottom_image"
+                  >Specification Bottom Image:</label
+                >
+                <app-image
+                  key="bottom_image"
+                  [setForm]="projectForm.get('flat_details.specification')"
+                  (onDelete)="addDeletedImageUrl($event)"
+                ></app-image>
+                <div
+                  *ngIf="
+                    projectForm.get('flat_details.specification.bottom_image')
+                      ?.invalid &&
+                    projectForm.get('flat_details.specification.bottom_image')
+                      ?.touched
+                  "
+                  class="text-danger"
+                >
+                  Specification Bottom Image is required.
+                </div>
+              </div>
+            </div>
+
+            <div formArrayName="bulleting" class="bulleting">
+              <div
+                *ngFor="
+                  let bullet of getSpecifications()?.controls;
+                  let i = index
+                "
+                formGroupName="{{ i }}"
+              >
+                <label for="specification_title{{ i }}">
+                  Specification Title {{ i + 1 }}:
+                </label>
+                <div class="row-group flex-nowrap">
+                  <input
+                    type="text"
+                    [id]="'specification_title' + i"
+                    formControlName="title"
+                    class="form-control"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeSpecification(i)"
+                    class="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <div
+                  *ngIf="
+                    bullet.get('title')?.invalid && bullet.get('title')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Specification Title is required.
+                </div>
+
+                <label for="specification_points">
+                  Specification Points {{ i + 1 }} :
+                </label>
+                <div formArrayName="points" class="points">
+                  <div
+                    *ngFor="
+                      let point of getSpecificationPoints(i)?.controls;
+                      let j = index
+                    "
+                  >
+                    <label for="specification_points{{ i }}_{{ j }}"
+                      >Specification Point {{ i + 1 }}.{{ j + 1 }}:</label
+                    >
+                    <div class="row-group flex-nowrap">
+                      <input
+                        type="text"
+                        [id]="'specification_points' + i + '_' + j"
+                        [formControlName]="j"
+                        class="form-control"
+                      />
+                      <button
+                        type="button"
+                        (click)="removeSpecificationPoint(i, j)"
+                        class="btn btn-danger"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                    <div
+                      *ngIf="point?.invalid && point?.touched"
+                      class="text-danger"
+                    >
+                      Specification Point is required.
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="addSpecificationPoint(i)"
+                    class="btn btn-info"
+                  >
+                    Add Specification Point
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                (click)="addSpecification()"
+                class="btn btn-warning"
+              >
+                Add Specification
+              </button>
+            </div>
+          </div>
+
+          <!-- Isometric View -->
+          <div class="form-group" class="col-group">
+            <label for="isometric_view_media">Floor Plan</label>
+            <app-image
+              id="isometric_view_media"
+              key="media"
+              [setForm]="projectForm.get('flat_details.isometric_view')"
+              [addFiles]="addIsometricViewMedia.bind(this)"
+              (onDelete)="addDeletedImageUrl($event)"
+            ></app-image>
+
+            <div
+              *ngIf="
+                projectForm.get('flat_details.isometric_view.media')?.invalid &&
+                projectForm.get('flat_details.isometric_view.media')?.touched
+              "
+              class="text-danger"
+            >
+              Isometric View Media is required.
+            </div>
+          </div>
+        </div>
+        <!-- Gallery Media -->
+        <div formArrayName="gallery_medias" class="col-group">
+          <label for="gallery_medias">Gallery Media</label>
+          <app-image
+            key="gallery_medias"
+            [setForm]="projectForm"
+            [addFiles]="addGalleryMedia.bind(this)"
+            (onDelete)="addDeletedImageUrl($event)"
+          ></app-image>
+
+          <div
+            *ngIf="
+              projectForm.controls['gallery_medias']?.invalid &&
+              projectForm.controls['gallery_medias']?.touched
+            "
+            class="text-danger"
+          >
+            Gallery Media is required.
+          </div>
+        </div>
+        <!-- Layout -->
+        <div class="col-group">
+          <label for="layout">Layout</label>
+          <div class="form-group">
+            <app-image
+              id="isometric_view_media"
+              key="layout"
+              [setForm]="projectForm"
+              (onDelete)="addDeletedImageUrl($event)"
+            ></app-image>
+            <div
+              *ngIf="
+                projectForm.controls['layout']?.invalid &&
+                projectForm.controls['layout']?.touched
+              "
+              class="text-danger"
+            >
+              Layout is required.
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="maps" class="col-group">
+          <label for="maps-title">Maps</label>
+          <div
+            *ngFor="let document of getMap().controls; let i = index"
+            class="form-group"
+            formGroupName="{{ i }}"
+          >
+            <div class="row-group flex-nowrap flex-column">
+              <label for="mapsTitle{{ i }}">Map Location {{ i + 1 }}:</label>
+              <div class="input-wrapper">
+                <div class="d-flex gap-3">
+                  <input
+                    type="text"
+                    formControlName="type"
+                    placeholder="Type"
+                    class="form-control"
+                  />
+                  <input
+                    type="text"
+                    formControlName="title"
+                    placeholder="Title"
+                    class="form-control"
+                  />
+                  <button
+                    type="button"
+                    (click)="removeMap(i)"
+                    class="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+                <div class="d-flex gap-3 pt-4">
+                  <label for="">Add Locations:</label>
+                  <button
+                    type="button"
+                    (click)="addMapLocation(i)"
+                    class="btn btn-dark"
+                  >
+                    Add Map Location
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div formArrayName="locations">
+              <div
+                *ngFor="
+                  let document of getMapLocation(i)?.controls;
+                  let i = index
+                "
+                class="form-group"
+                formGroupName="{{ i }}"
+              >
+                <div class="row align-items-center pt-4">
+                  <div class="col-lg-6">
+                    <label for="title">Location {{ i + 1 }}</label>
+                    <input
+                      type="text"
+                      formControlName="location_name"
+                      placeholder="Location"
+                      class="form-control mb-3"
+                    />
+                  </div>
+                  <div class="col-lg-6">
+                    <label for="">Distance{{ i + 1 }}</label>
+                    <input
+                      type="text"
+                      formControlName="distance"
+                      placeholder="Distance"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" (click)="addMapTitle()" class="btn btn-warning">
+            Add Map Title
+          </button>
+        </div>
+        <div>
+          <label for="location_in_map">Location in Map</label>
+          <input
+            type="text"
+            formControlName="location_in_map"
+            class="form-control"
+            placeholder="Location"
+          />
+        </div>
+        <!-- Apartment Document -->
+        <div formArrayName="apartment_document" class="col-group">
+          <label for="apartment_document">Apartment Documents</label>
+          <div
+            *ngFor="
+              let document of getApartmentDocuments().controls;
+              let i = index
+            "
+            class="form-group"
+            formGroupName="{{ i }}"
+          >
+            <div class="row-group flex-nowrap flex-column">
+              <label for="apartment_document{{ i }}"
+                >Apartment Document {{ i + 1 }}:</label
+              >
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  formControlName="title"
+                  placeholder="Title"
+                  class="form-control"
+                />
+
+                <app-image
+                  key="location"
+                  [setForm]="document"
+                  (onDelete)="addDeletedImageUrl($event)"
+                ></app-image>
+              </div>
+              <button
+                type="button"
+                (click)="removeApartmentDocument(i)"
+                class="btn btn-danger"
+              >
+                Delete
+              </button>
+              <div
+                *ngIf="document?.invalid && document?.touched"
+                class="text-danger"
+              >
+                Apartment Document is required.
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="addApartmentDocument()"
+            class="btn btn-warning"
+          >
+            Add Apartment Documents
+          </button>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<h4 class="mt-2 mb-2">Listing:</h4>
+
+<div *ngIf="projects?.length > 0; else noProjects" class="list">
+  <div *ngFor="let project of projects" class="card">
+    <!-- Display project details -->
+    <h2 class="titleWrap">{{ project.title }}</h2>
+    <p class="titleWrap">{{ project.sub_title }}</p>
+    <hr />
+    <img [src]="project.title_image[0]" alt="Thumbnail" />
+    <hr />
+    <p>{{ project.desc }}</p>
+
+    <div class="btn-controls">
+      <button
+        class="btn btn-info"
+        (click)="addTrendingProject(project._id)"
+        [disabled]="isProjectTrending(project._id)"
+      >
+        Add to Trending
+      </button>
+      <button
+        class="btn btn-info btn-left edit-btn"
+        type="button"
+        (click)="editProject(project)"
+      >
+        Edit
+      </button>
+
+      <button
+        class="btn btn-danger btn-left"
+        type="button"
+        (click)="deleteProject(project._id)"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noProjects>
+  <p>No projects available.</p>
+</ng-template>

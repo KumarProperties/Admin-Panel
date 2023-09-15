@@ -1,0 +1,50 @@
+<div class="main">
+  <div
+    class="d-flex flex-column flex-shrink-0 p-3"
+    style="width: 280px; height: 100vh"
+  >
+    <a
+      href="/"
+      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
+    >
+      <svg class="bi me-2" width="40" height="32">
+        <use xlink:href="#bootstrap"></use>
+      </svg>
+      <span class="fs-4">Kumar Properties</span>
+    </a>
+    <hr />
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item" *ngFor="let item of sidebarList; index as i">
+        <a
+          class="nav-link"
+          [routerLink]="[item.route]"
+          [ngClass]="{
+            active: item.active == true,
+            'link-dark': item.active == false
+          }"
+          aria-current="page"
+          (click)="selectMenu(i)"
+          style="cursor: pointer"
+          *ngIf="!item.hide"
+        >
+          {{ item.label }}
+        </a>
+      </li>
+    </ul>
+    <hr />
+    <div class="brand-logo">
+      <p>Kumar Properties</p>
+    </div>
+  </div>
+  <div class="side-components-container">
+    <div
+      class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+    >
+      <h1 class="h2">{{ heading }}</h1>
+      <button class="btn btn-primary mx-5" (click)="state.logout()">
+        Logout
+      </button>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

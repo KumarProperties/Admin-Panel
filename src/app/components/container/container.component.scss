@@ -1,0 +1,14 @@
+.main {
+  display: flex;
+  flex-wrap: nowrap;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.side-components-container {
+  margin-left: 1em;
+  overflow: auto;
+  width: 100%;
+}

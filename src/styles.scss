@@ -1,0 +1,117 @@
+*,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  /* overflow: hidden; */
+}
+
+p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.btn-primary,
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: rgb(33, 37, 41) !important;
+}
+
+.form-check-input:checked {
+  background-color: rgb(33, 37, 41) !important;
+  border-color: rgb(33, 37, 41) !important;
+}
+
+form {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.col-group {
+  display: flex;
+  flex-direction: column;
+  border: 2pt solid gainsboro;
+  border-radius: 8pt;
+  position: relative;
+  padding: 1.5rem 1rem;
+  margin-top: 1rem;
+
+  & > label {
+    position: absolute;
+    top: -1rem;
+    left: 1rem;
+    padding: 0.1rem 0.4rem;
+    background-color: whitesmoke;
+    box-shadow: 0 0 0 1pt gainsboro;
+    border-radius: 8pt;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  & > div {
+    padding: 0.5rem;
+  }
+}
+
+.btn.btn-warning,
+.btn.btn-info {
+  align-self: center;
+  margin: auto;
+  width: fit-content;
+}
+
+.btn.btn-left {
+  margin-left: 0;
+}
+
+/* rgb(33,37,41) */
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20pt;
+  padding: 1rem;
+
+  .card {
+    border: 1pt solid #ccc;
+    padding: 10pt;
+    border-radius: 8pt;
+    width: 18rem;
+    gap: 0.4rem;
+
+    img {
+      border-radius: 8pt;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+  }
+}
+
+.btn-controls {
+  display: flex;
+  margin-top: auto;
+  align-items: center;
+}
+
+textarea {
+  height: 10rem;
+}
+
+.titleWrap{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  overflow: hidden;
+}

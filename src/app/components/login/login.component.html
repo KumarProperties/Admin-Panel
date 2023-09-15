@@ -1,0 +1,44 @@
+<div class="outer-box">
+  <main class="form-signin">
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+      <div class="text-center">
+        <img
+          class="mb-4"
+          src="./assets/images/logos/welcomeToH.png"
+          alt=""
+          class="bg-dark rounded-3 mb-4"
+        />
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+      </div>
+      <div class="form-floating">
+        <input
+          type="email"
+          class="form-control"
+          id="floatingInput"
+          placeholder="name@example.com"
+          formControlName="email"
+        />
+        <label for="floatingInput">Email address</label>
+      </div>
+      <div class="form-floating">
+        <input
+          type="password"
+          class="form-control"
+          id="floatingPassword"
+          placeholder="Password"
+          formControlName="password"
+        />
+        <label for="floatingPassword">Password</label>
+      </div>
+      <button
+        class="w-100 btn btn-lg btn-primary"
+        type="submit"
+        [disabled]="!loginForm.valid"
+      >
+        Sign in
+      </button>
+      <p class="mt-5 text-muted text-center">Powered by InkInCaps.</p>
+      <p class="text-muted text-center">&copy; 2022–2023</p>
+    </form>
+  </main>
+</div>

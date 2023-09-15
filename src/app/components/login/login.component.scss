@@ -1,0 +1,36 @@
+.outer-box {
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  padding-bottom: 40px;
+  padding-top: 40px;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+
+  .checkbox {
+    font-weight: 400;
+  }
+
+  .form-floating {
+    &:focus-within {
+      z-index: 2;
+    }
+  }
+
+  input[type=email] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: -1px;
+  }
+
+  input[type=password] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 10px;
+  }
+}

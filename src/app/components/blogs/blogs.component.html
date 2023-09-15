@@ -1,0 +1,222 @@
+<button
+  type="button"
+  class="btn btn-warning"
+  id="addNewBlog"
+  data-bs-toggle="modal"
+  data-bs-target="#addBlog"
+  (click)="initializeForm()"
+>
+  Create New Blog
+</button>
+<div
+  class="modal fade"
+  id="addBlog"
+  tabindex="-1"
+  aria-labelledby="addBlogLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addBlogLabel">New Blog</h1>
+        <button
+          id="closeAddBlog"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeProject()"
+        ></button>
+      </div>
+      <div class="container">
+        <form [formGroup]="blogForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" formControlName="title" class="form-control" />
+            <div
+              *ngIf="
+                blogForm.get('title')?.invalid && blogForm.get('title')?.touched
+              "
+              class="text-danger"
+            >
+              Title is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Sub Title</label>
+            <input
+              type="text"
+              formControlName="sub_title"
+              class="form-control"
+            />
+            <div
+              *ngIf="
+                blogForm.get('sub_title')?.invalid &&
+                blogForm.get('sub_title')?.touched
+              "
+              class="text-danger"
+            >
+              Sub Title is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea formControlName="desc" class="form-control"></textarea>
+            <div
+              *ngIf="
+                blogForm.get('desc')?.invalid && blogForm.get('desc')?.touched
+              "
+              class="text-danger"
+            >
+              Description is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Thumbnail</label>
+            <app-image
+              key="thumb"
+              [setForm]="blogForm"
+              (onDelete)="addDeletedImageUrl($event)"
+            ></app-image>
+            <div
+              *ngIf="
+                blogForm.get('thumb')?.invalid && blogForm.get('thumb')?.touched
+              "
+              class="text-danger"
+            >
+              Thumbnail is required.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <div class="row p-1">
+              <div>
+                Date :
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="date"
+                  placeholder="Start Date"
+                />
+                <div
+                  *ngIf="
+                    blogForm.get('date')?.invalid &&
+                    blogForm.get('date')?.touched
+                  "
+                  class="text-danger"
+                >
+                  <div *ngIf="blogForm.get('date')?.errors?.['required']">
+                    Date is required.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Section -->
+          <div formArrayName="content" class="col-group">
+            <label>Blog Content</label>
+            <div
+              *ngFor="let content of getContents().controls; let i = index"
+              class="align-items-center d-flex flex-column gap-3"
+              [formGroupName]="i"
+            >
+              <div class="form-group w-100">
+                <label>Content Text</label>
+                <div
+                  [id]="'quill-test-' + i"
+                  formControlName="text"
+                  class="form-control w-100"
+                  ngDefaultControl
+                ></div>
+                <div
+                  *ngIf="
+                    content.get('text')?.invalid && content.get('text')?.touched
+                  "
+                  class="text-danger"
+                >
+                  Content Text is required.
+                </div>
+              </div>
+              <div class="form-group">
+                <app-image
+                  key="image"
+                  [setForm]="content"
+                  (onDelete)="addDeletedImageUrl($event)"
+                ></app-image>
+              </div>
+              <div class="d-flex justify-content-evenly w-100">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="removeContent(i)"
+                >
+                  Remove Content
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="moveContentUp(i)"
+                  [disabled]="i === 0"
+                >
+                  Move Up
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="moveContentDown(i)"
+                  [disabled]="i === getContents().length - 1"
+                >
+                  Move Down
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-warning"
+              (click)="addContent()"
+            >
+              Add Content
+            </button>
+          </div>
+
+          <button type="submit" class="btn btn-success">Submit Blog</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 class="mt-2 mb-2">Listing:</h4>
+
+<div *ngIf="blogs.length > 0; else noBlogs" class="list">
+  <div *ngFor="let blog of blogs" class="card">
+    <!-- Display blog details -->
+    <h2 class="titleWrap">{{ blog.title }}</h2>
+    <p>{{ blog.sub_title }}</p>
+    <hr />
+    <img [src]="blog.thumb" alt="Thumbnail" />
+    <hr />
+    <div class="btn-controls">
+      <button
+        class="btn btn-info btn-left edit-btn"
+        type="button"
+        (click)="editBlog(blog)"
+      >
+        Edit
+      </button>
+      <button
+        class="btn btn-danger btn-left"
+        type="button"
+        (click)="deleteBlog(blog._id)"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noBlogs>
+  <p>No blogs available.</p>
+</ng-template>

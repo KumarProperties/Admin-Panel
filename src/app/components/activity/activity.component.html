@@ -1,0 +1,297 @@
+<ng-container *ngIf="isLoading">
+  <app-loader></app-loader>
+</ng-container>
+
+<button
+  type="button"
+  id="addNewActivity"
+  class="btn btn-warning"
+  data-bs-toggle="modal"
+  data-bs-target="#addActivity"
+  (click)="initializeForm()"
+>
+  Create New Activity
+</button>
+<div
+  class="modal fade"
+  id="addActivity"
+  tabindex="-1"
+  aria-labelledby="addActivityLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addAssetModalLabel">New Activity</h1>
+        <button
+          type="button"
+          id="closeActivity"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeProject()"
+        ></button>
+      </div>
+      <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="form-group col-lg-6">
+            <label for="type">Type:</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              formControlName="type"
+              value="{{ activityType }}"
+              readonly
+            />
+            <div
+              *ngIf="
+                activityForm.get('type')?.errors &&
+                activityForm.get('type')?.touched
+              "
+              class="text-danger"
+            >
+              <div *ngIf="activityForm.get('type')?.errors?.['required']">
+                Type is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-6">
+            <label for="title">Title:</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              formControlName="title"
+            />
+            <div
+              *ngIf="
+                activityForm.get('title')?.errors &&
+                activityForm.get('title')?.touched
+              "
+              class="text-danger"
+            >
+              <div *ngIf="activityForm.get('title')?.errors?.['required']">
+                Title is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="location">Location:</label>
+          <input
+            type="text"
+            id="location"
+            class="form-control"
+            formControlName="location"
+          />
+          <div
+            *ngIf="
+              activityForm.get('location')?.errors &&
+              activityForm.get('location')?.touched
+            "
+            class="text-danger"
+          >
+            <div *ngIf="activityForm.get('location')?.errors?.['required']">
+              Location is required.
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="date" class="form-group">
+          <label for="date">Date:</label>
+          <div class="row p-1">
+            <div class="">
+              <div class="row">
+                <div class="col-lg-6">
+                  Start Date :
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="start_date"
+                    placeholder="Start Date"
+                  />
+                  <div
+                    *ngIf="
+                      activityForm.get('date.start_date')?.invalid &&
+                      activityForm.get('date.start_date')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    <div
+                      *ngIf="activityForm.get('date.start_date')?.errors?.['required']"
+                    >
+                      Start Date is required.
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  End Date :
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="end_date"
+                    placeholder="End Date"
+                  />
+                  <div
+                    *ngIf="
+                      activityForm.get('date.end_date')?.invalid &&
+                      activityForm.get('date.end_date')?.touched
+                    "
+                    class="text-danger"
+                  >
+                    <div
+                      *ngIf="activityForm.get('date.end_date')?.errors?.['required']"
+                    >
+                      End Date is required.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="row p-3 flex-col justify-content-between gap-2"
+                formArrayName="dates"
+              >
+                In Between Dates :
+                <div
+                  *ngFor="let date of getDateControls().controls; let i = index"
+                >
+                  <input
+                    type="date"
+                    class="form-control"
+                    [formControlName]="i"
+                    placeholder="In Between Date"
+                  />
+                </div>
+                <button
+                  type="button"
+                  (click)="addNewDate()"
+                  class="btn btn-warning m-0"
+                >
+                  Add Date
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="thumb">Thumb:</label>
+          <app-image
+            key="thumb"
+            [setForm]="activityForm"
+            (onDelete)="addDeletedImageUrl($event)"
+          ></app-image>
+          <div
+            *ngIf="
+              activityForm.get('thumb')?.errors &&
+              activityForm.get('thumb')?.touched
+            "
+            class="text-danger"
+          >
+            <div *ngIf="activityForm.get('thumb')?.errors?.['required']">
+              Thumb is required.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <div
+            id="description"
+            class="form-control"
+            formControlName="desc"
+          ></div>
+        </div>
+        <!--
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input
+            type="text"
+            id="address"
+            class="form-control"
+            formControlName="address"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="redirectionLink">Redirection Link:</label>
+          <input
+            type="text"
+            id="redirectionLink"
+            class="form-control"
+            formControlName="redirection_link"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="shareLink">Share Link:</label>
+          <input
+            type="text"
+            id="shareLink"
+            class="form-control"
+            formControlName="share_link"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="relatedToProject">Related to Project:</label>
+          <input
+            type="text"
+            id="relatedToProject"
+            class="form-control"
+            formControlName="related_to_project"
+          />
+        </div> -->
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="d-flex mt-2 mb-2 gap-2">
+  <label *ngFor="let type of activityTypes">
+    <input type="radio" name="activity-type" (click)="getActivities(type)" />
+    {{ type }}
+  </label>
+</div> -->
+
+<h4 class="mt-2 mb-2">Listing:</h4>
+
+<div *ngIf="activities.length > 0; else noActivities" class="list">
+  <div *ngFor="let activity of activities" class="card">
+    <!-- Display activity details -->
+    <h2 class="titleWrap">{{ activity.title }}</h2>
+    <p>{{ activity.sub_title }}</p>
+    <hr />
+    <img [src]="activity.thumb" alt="Thumbnail" />
+    <p>
+      Dates :
+      {{ showDate(activity) }}
+    </p>
+    <hr />
+    <!-- <p>{{ activity.desc }}</p> -->
+    <div class="btn-controls">
+      <button
+        class="btn btn-info btn-left edit-btn"
+        type="button"
+        (click)="editActivity(activity)"
+      >
+        Edit
+      </button>
+      <button
+        class="btn btn-danger btn-left"
+        type="button"
+        (click)="deleteActivity(activity._id)"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noActivities>
+  <p>No activities available.</p>
+</ng-template>
